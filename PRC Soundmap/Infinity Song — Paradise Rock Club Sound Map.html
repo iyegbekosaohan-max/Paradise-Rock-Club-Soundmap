@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Infinity Song — Paradise Rock Club: Sound Map + Tour</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root { --dot: rgba(30,144,255,.92); --dot-hover: rgba(30,144,255,1); }
+  body{margin:0;padding:24px;background:#f4f4f8;color:#222;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;text-align:center}
+  h1{margin:0 0 6px;font-size:1.6rem}
+  p{margin:6px 0 16px;color:#555}
+  .controls{display:flex;gap:10px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer}
+  .btn:hover{background:#eee}
+  .map-wrap{display:inline-block;position:relative;max-width:100%}
+  .map-wrap img{max-width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  .point{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--dot);border:2px solid #fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:transform .15s,background .15s}
+  .point:hover,.point:focus{transform:scale(1.12);background:var(--dot-hover)}
+  .point:focus-visible{outline:3px solid #111;outline-offset:2px}
+  .point .label{position:absolute;top:-44px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:6px 10px;border-radius:8px;white-space:nowrap;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .12s,transform .12s}
+  .point .label::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-6px;border-width:6px;border-style:solid;border-color:#111 transparent transparent transparent}
+  .point:hover .label,.point:focus .label{opacity:1;transform:translateX(-50%) translateY(-2px)}
+  .player{margin:18px auto 0;max-width:900px}
+  audio{width:100%}
+  .caption{margin-top:8px;font-style:italic;color:#444;min-height:1.2em}
+  dialog{border:none;border-radius:14px;padding:0;max-width:min(920px,95vw);width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .modal{display:grid;grid-template-columns:1fr;background:#fff;border-radius:14px;overflow:hidden}
+  .media-wrap{background:#000;aspect-ratio:16/9;display:grid;place-items:center}
+  .media-wrap img,.media-wrap video{max-width:100%;max-height:100%}
+  .modal-body{padding:14px 16px;text-align:left}
+  .modal-title{margin:0 0 4px;font-weight:700}
+  .modal-sub{color:#555;margin:0 0 10px}
+  .modal-audio{width:100%}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+  @media (min-width:820px){.modal{grid-template-columns:58% 42%}.modal-body{padding:16px 18px}}
+</style>
+</head>
+<body>
+  <h1>Infinity Song — Paradise Rock Club: Interactive Sound Map</h1>
+  <div class="controls">
+    <button class="btn" id="playTourBtn">▶ Play Tour</button>
+    <button class="btn" id="pauseTourBtn" disabled>⏸️ Pause</button>
+    <button class="btn" id="resumeTourBtn" disabled>▶ Resume</button>
+    <button class="btn" id="stopTourBtn" disabled>⏹ Stop</button>
+  </div>
+  <p>Hover a dot to see the spot. Click to open photo/video and hear the sound. Or run the tour.</p>
+
+  <div class="map-wrap">
+    <img src="paradise_map.jpg" alt="Paradise Rock Club Map" id="map">
+
+    <!-- SAMPLE POINTS: set data-duration (seconds) if you want a custom stop length in the tour -->
+    <button class="point" style="top:78%; left:56%;"
+      data-title="Outside Line (Comm Ave)"
+      data-desc="Queue chatter, traffic, door staff. Pre-show vibe."
+      data-audio="outside.mp3"
+      data-media="outside.jpg"
+      data-type="image"
+      data-duration="10"
+      aria-label="Outside Line">
+      <span class="label">Outside Line</span>
+    </button>
+
+    <button class="point" style="top:54%; left:48%;"
+      data-title="Entrance / Box Office"
+      data-desc="Ticket scanners, wristbands, bass spill."
+      data-audio="entrance.mp3"
+      data-media="entrance.jpg"
+      data-type="image"
+      data-duration="12"
+      aria-label="Entrance">
+      <span class="label">Entrance</span>
+    </button>
+
+    <button class="point" style="top:47%; left:37%;"
+      data-title="Merch & Bar"
+      data-desc="Orders, ice clinks, crowd murmur."
+      data-audio="merchbar.mp3"
+      data-media="merch.jpg"
+      data-type="image"
+      data-duration="12"
+      aria-label="Merch & Bar">
+      <span class="label">Merch & Bar</span>
+    </button>
+
+    <button class="point" style="top:30%; left:48%;"
+      data-title="Floor (FOH)"
+      data-desc="Balanced mix, audience reactions."
+      data-audio="floor_foh.mp3"
+      data-media="foh.jpg"
+      data-type="image"
+      data-duration="15"
+      aria-label="Floor (FOH)">
+      <span class="label">Floor (FOH)</span>
+    </button>
+
+    <button class="point" style="top:30%; left:60%;"
+      data-title="Balcony"
+      data-desc="Room reverb, overall blend, less sub-bass."
+      data-audio="balcony.mp3"
+      data-media="balcony.jpg"
+      data-type="image"
+      data-duration="12"
+      aria-label="Balcony">
+      <span class="label">Balcony</span>
+    </button>
+
+    <button class="point" style="top:28%; left:41%;"
+      data-title="Front Rail / Stage"
+      data-desc="Vocals up-front, crowd singalong, subs."
+      data-audio="stage.mp3"
+      data-media="stage_clip.mp4"
+      data-type="video"
+      data-duration="15"
+      aria-label="Front Rail">
+      <span class="label">Front Rail</span>
+    </button>
+  </div>
+
+  <!-- Optional page player/caption (stays in sync with modal) -->
+  <div class="player">
+    <audio id="pageAudio" controls preload="none"></audio>
+    <div id="pageCaption" class="caption"></div>
+  </div>
+
+  <!-- Modal -->
+  <dialog id="mediaDialog">
+    <div class="modal">
+      <div class="media-wrap" id="mediaWrap"></div>
+      <div class="modal-body">
+        <h3 class="modal-title" id="modalTitle">Title</h3>
+        <p class="modal-sub" id="modalDesc">Description</p>
+        <audio id="modalAudio" class="modal-audio" controls preload="none"></audio>
+        <div class="modal-actions">
+          <button class="btn" id="downloadBtn">Download clip</button>
+          <button class="btn" id="closeBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+<script>
+  const points = Array.from(document.querySelectorAll('.point'));
+  points.forEach(btn => btn.addEventListener('click', () => openMedia(btn)));
+
+  const dialog = document.getElementById('mediaDialog');
+  const mediaWrap = document.getElementById('mediaWrap');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc  = document.getElementById('modalDesc');
+  const modalAudio = document.getElementById('modalAudio');
+  const pageAudio  = document.getElementById('pageAudio');
+  const pageCaption= document.getElementById('pageCaption');
+  const closeBtn   = document.getElementById('closeBtn');
+  const downloadBtn= document.getElementById('downloadBtn');
+
+  function openMedia(el){
+    const title = el.dataset.title || 'Untitled';
+    const desc  = el.dataset.desc  || '';
+    const audio = el.dataset.audio || '';
+    const media = el.dataset.media || '';
+    const type  = el.dataset.type  || 'image';
+
+    if (!pageAudio.paused) pageAudio.pause();
+
+    modalTitle.textContent = title;
+    modalDesc.textContent  = desc;
+    modalAudio.src = audio;
+    downloadBtn.onclick = () => window.open(audio, '_blank');
+
+    mediaWrap.innerHTML = '';
+    if (type === 'video') {
+      const v = document.createElement('video');
+      v.src = media;
+      v.controls = true;
+      v.playsInline = true;
+      v.muted = true;
+      v.autoplay = true;
+      mediaWrap.appendChild(v);
+    } else {
+      const img = document.createElement('img');
+      img.src = media;
+      img.alt = title;
+      mediaWrap.appendChild(img);
+    }
+
+    dialog.showModal();
+    modalAudio.play().catch(()=>{});
+    pageAudio.src = audio;
+    pageCaption.textContent = title + ' — ' + desc;
+  }
+
+  closeBtn.addEventListener('click', ()=>{
+    modalAudio.pause();
+    const vid = mediaWrap.querySelector('video'); if (vid) vid.pause();
+    dialog.close();
+  });
+
+  dialog.addEventListener('click', (e)=>{
+    const rect = dialog.querySelector('.modal').getBoundingClientRect();
+    const inBox = e.clientX >= rect.left && e.clientX <= rect.right &&
+                  e.clientY >= rect.top  && e.clientY <= rect.bottom;
+    if (!inBox) closeBtn.click();
+  });
+
+  // ---------- TOUR ----------
+  let tourIndex = 0;
+  let tourTimer = null;
+  let tourPaused = false;
+
+  const playBtn   = document.getElementById('playTourBtn');
+  const pauseBtn  = document.getElementById('pauseTourBtn');
+  const resumeBtn = document.getElementById('resumeTourBtn');
+  const stopBtn   = document.getElementById('stopTourBtn');
+
+  playBtn.addEventListener('click', startTour);
+  pauseBtn.addEventListener('click', pauseTour);
+  resumeBtn.addEventListener('click', resumeTour);
+  stopBtn.addEventListener('click', stopTour);
+
+  function startTour(){
+    stopTour(true); // reset any previous run
+    tourIndex = 0;
+    tourPaused = false;
+    playBtn.disabled = true;
+    pauseBtn.disabled = false;
+    stopBtn.disabled = false;
+    resumeBtn.disabled = true;
+    stepTour();
+  }
+
+  function stepTour(){
+    if (tourPaused || tourIndex >= points.length) { stopTour(); return; }
+
+    const el = points[tourIndex];
+    openMedia(el);
+
+    // duration fallback: use data-duration or 12s if not set
+    const dur = parseFloat(el.dataset.duration) || 12;
+
+    clearTimeout(tourTimer);
+    tourTimer = setTimeout(()=>{
+      if (!tourPaused) {
+        tourIndex++;
+        stepTour();
+      }
+    }, dur * 1000);
+  }
+
+  function pauseTour(){
+    tourPaused = true;
+    clearTimeout(tourTimer);
+    pauseBtn.disabled = true;
+    resumeBtn.disabled = false;
+  }
+
+  function resumeTour(){
+    if (!tourPaused) return;
+    tourPaused = false;
+    pauseBtn.disabled = false;
+    resumeBtn.disabled = true;
+    stepTour();
+  }
+
+  function stopTour(silent=false){
+    tourPaused = false;
+    clearTimeout(tourTimer);
+    playBtn.disabled = false;
+    pauseBtn.disabled = true;
+    resumeBtn.disabled = true;
+    stopBtn.disabled = true;
+    if (!silent && dialog.open) closeBtn.click();
+  }
+</script>
+</body>
+</html>
